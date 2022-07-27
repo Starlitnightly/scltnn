@@ -8,3 +8,7 @@ sklearn
 scglue
 distfit
 tensorflow
+sphinx_autosummary_accessors
+sphinx_autodoc_typehints
+inspect
+recommonmark
