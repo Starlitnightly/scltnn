@@ -3,6 +3,7 @@
 [![Lifecycle:maturing](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing)
 [![bulid:passing](https://img.shields.io/appveyor/build/gruntjs/grunt)](https://img.shields.io/appveyor/build/gruntjs/grunt)
 [![License:GPL](https://img.shields.io/badge/license-GPL-blue)](https://img.shields.io/apm/l/vim-mode)
+[![Documentation Status](https://readthedocs.org/projects/scltnn/badge/?version=latest)](https://scltnn.readthedocs.io/en/latest/?badge=latest)
 
 **A composite regression neural network for latent timing prediction of single-cell RNA-seq data**
 
