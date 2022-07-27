@@ -11,3 +11,6 @@ tensorflow
 sphinx_autosummary_accessors
 sphinx_autodoc_typehints
 recommonmark
+sphinx_markdown_tables
+sphinx_copybutton
+nbsphinx
