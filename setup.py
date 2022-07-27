@@ -12,7 +12,7 @@ with open("README.md", "r") as fh:
 if __name__ == "__main__":
     setuptools.setup(
         name="scltnn",
-        version='0.0.2',
+        version='0.0.3',
         packages=['scltnn'],
         author='starlitnightly',
         author_email='starlitnightly@163.com',

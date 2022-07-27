@@ -1,4 +1,4 @@
-﻿scltnn.models.scLTNN
+scltnn.models.scLTNN
 ====================
 
 .. currentmodule:: scltnn.models

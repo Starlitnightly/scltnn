@@ -149,13 +149,15 @@ class scLTNN(object):
         else:
             self.adata_test.obs['p_latent_time']=self.adata_test.obs['p_time']
             
-    def cal_dpt_pseudotime(self,leiden_range=0.01,leiden_range_mid=0.05,rev=False):
+    def cal_dpt_pseudotime(self,leiden_range_start=0.01,leiden_range_end=0.01,leiden_range_mid=0.05,rev=False):
         r"""calculate the diffusion pseudotime of anndata by start node selected automatically
 
         Arguments
         ---------
-        leiden_range
-            the range of start and end node
+        leiden_range_start
+            the range of start node
+        leiden_range_end
+            the range of end node
         leiden_range_mid
             the range of middle node
         rev
@@ -172,8 +174,8 @@ class scLTNN(object):
         leiden_start=leiden_pd.index[0]
         leiden_end=leiden_pd.index[-1]
 
-        self.leiden_start=leiden_pd.loc[leiden_pd['Time_value']<leiden_pd.loc[leiden_pd.index[0]].values[0]+leiden_range].index.tolist()
-        self.leiden_end=leiden_pd.loc[leiden_pd['Time_value']>leiden_pd.loc[leiden_pd.index[-1]].values[0]-leiden_range].index.tolist()
+        self.leiden_start=leiden_pd.loc[leiden_pd['Time_value']<leiden_pd.loc[leiden_pd.index[0]].values[0]+leiden_range_start].index.tolist()
+        self.leiden_end=leiden_pd.loc[leiden_pd['Time_value']>leiden_pd.loc[leiden_pd.index[-1]].values[0]-leiden_range_end].index.tolist()
         
         
         #prev
@@ -197,6 +199,9 @@ class scLTNN(object):
         self.leiden_middle=leiden_dpt_pd.loc[(leiden_dpt_pd['Time_value']<leiden_middle_value+leiden_range_mid)&
                         (leiden_dpt_pd['Time_value']>leiden_middle_value-leiden_range_mid)].index.tolist()
 
+        self.leiden_start=list(set(self.leiden_start).difference(set(self.leiden_middle)))
+        self.leiden_end=list(set(self.leiden_end).difference(set(self.leiden_middle)))
+        
         print('......leiden_start:',self.leiden_start)
         print('......leiden_middle',self.leiden_middle)
         print('......leiden_end',self.leiden_end)
