@@ -1,4 +1,4 @@
-scltnn.models.scLTNN
+﻿scltnn.models.scLTNN
 ====================
 
 .. currentmodule:: scltnn.models
@@ -25,6 +25,7 @@ scltnn.models.scLTNN
       ~scLTNN.cal_scLTNN_time
       ~scLTNN.creat_radio_model
       ~scLTNN.distribute_fun
+      ~scLTNN.lazy_cal
       ~scLTNN.load_model
    
    

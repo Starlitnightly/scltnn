@@ -58,7 +58,7 @@ class scLTNN(object):
 
         Arguments
         ---------
-        model_path:
+        model_path
             the path of the ANN model constructed by primriart training
         
         """
@@ -69,7 +69,7 @@ class scLTNN(object):
 
         Arguments
         ---------
-        n_top_genes:
+        n_top_genes
             the num of the high variable genes selected
         
         """
@@ -82,7 +82,7 @@ class scLTNN(object):
 
         Arguments
         ---------
-        n_components:
+        n_components
             the num latent dimension of LSI 
         
         """
@@ -95,7 +95,7 @@ class scLTNN(object):
 
         Arguments
         ---------
-        resolution:
+        resolution
             A parameter value controlling the coarseness of the clustering.
             Higher values lead to more clusters.
             Set to `None` if overriding `partition_type`
@@ -104,7 +104,7 @@ class scLTNN(object):
         """
         print('......calculate paga')
         sc.pp.neighbors(self.adata_test, n_neighbors=10, n_pcs=40)
-        sc.tl.leiden(self.adata_test, resolution=1.0)
+        sc.tl.leiden(self.adata_test, resolution=resolution)
         sc.tl.paga(self.adata_test, groups='leiden')
         
     def cal_model_time(self):
@@ -125,10 +125,11 @@ class scLTNN(object):
         
         Arguments
         ---------
-        species:
+        species
             the species of scRNA-seq
             human:human
             mouse:mouse
+            zebrafish:zebrafish
         
         """
         print('......calculate RPS value')
@@ -136,6 +137,8 @@ class scLTNN(object):
             rps_name='RPS'
         elif species=='mouse':
             rps_name='Rps'
+        elif species=='zebrafish':
+            rps_name='RPS'
         RPS_s=self.adata_test[self.adata_test.obs['p_time']<0.2,self.adata_test.var.index.str.contains(rps_name)].X.mean()
         RPS_l=self.adata_test[self.adata_test.obs['p_time']>0.8,self.adata_test.var.index.str.contains(rps_name)].X.mean()
         if (RPS_l>1):
@@ -146,15 +149,16 @@ class scLTNN(object):
         else:
             self.adata_test.obs['p_latent_time']=self.adata_test.obs['p_time']
             
-    def cal_dpt_pseudotime(self,leiden_range=0.01,rev=False):
+    def cal_dpt_pseudotime(self,leiden_range=0.01,leiden_range_mid=0.05,rev=False):
         r"""calculate the diffusion pseudotime of anndata by start node selected automatically
 
         Arguments
         ---------
-        leiden_range:
+        leiden_range
             the range of start and end node
-
-        rev:
+        leiden_range_mid
+            the range of middle node
+        rev
             test function to use the end node
 
         """
@@ -171,13 +175,32 @@ class scLTNN(object):
         self.leiden_start=leiden_pd.loc[leiden_pd['Time_value']<leiden_pd.loc[leiden_pd.index[0]].values[0]+leiden_range].index.tolist()
         self.leiden_end=leiden_pd.loc[leiden_pd['Time_value']>leiden_pd.loc[leiden_pd.index[-1]].values[0]-leiden_range].index.tolist()
         
-        print('......leiden_start',self.leiden_start,'leiden_end',self.leiden_end)
         
         #prev
         self.adata_test.uns['iroot'] = np.flatnonzero(self.adata_test.obs['leiden'].isin(self.leiden_start))[0]
         sc.tl.diffmap(self.adata_test)
         sc.tl.dpt(self.adata_test)
         self.adata_test.obs['dpt_pseudotime_p']=self.adata_test.obs['dpt_pseudotime'].values
+
+        #middle
+        leiden_dpt_pd=pd.DataFrame(columns=['Time_value'])
+        for i in set(self.adata_test.obs['leiden']):
+            leiden_dpt_pd.loc[i]={'Time_value':self.adata_test.obs.loc[self.adata_test.obs['leiden']==i,'dpt_pseudotime'].mean()}
+        leiden_dpt_pd=leiden_dpt_pd.sort_values('Time_value') 
+        self.leiden_dpt_pd=leiden_dpt_pd
+        leiden_sum=len(leiden_dpt_pd)
+        leiden_middle=leiden_sum//2
+        
+        leiden_middle_index=leiden_dpt_pd.iloc[leiden_middle].name
+        leiden_middle_value=leiden_dpt_pd.iloc[leiden_middle].values[0]
+
+        self.leiden_middle=leiden_dpt_pd.loc[(leiden_dpt_pd['Time_value']<leiden_middle_value+leiden_range_mid)&
+                        (leiden_dpt_pd['Time_value']>leiden_middle_value-leiden_range_mid)].index.tolist()
+
+        print('......leiden_start:',self.leiden_start)
+        print('......leiden_middle',self.leiden_middle)
+        print('......leiden_end',self.leiden_end)
+        
         
         #rev
         if rev==True:
@@ -196,16 +219,13 @@ class scLTNN(object):
         
         Arguments
         ---------
-        batch_size:
+        batch_size
             the batch_size of ANN model
-
-        epochs:
+        epochs
             the epochs of ANN model
-
-        verbose:
+        verbose
             the visualization of ANN model summary
-
-        mode:
+        mode
             the calculation mode of ANN model
             if we want to use the diffusion time to regression the ANN model
             we can set the model 'dpt_time'
@@ -221,11 +241,13 @@ class scLTNN(object):
         #a1['p_time']=np.random.normal(0.07, 0.03, len(a1))
         a2=plot_pd.loc[plot_pd['leiden'].isin(self.leiden_end)].copy()
         #a2['p_time']=np.random.normal(0.93, 0.03, len(a2))
+        a3=plot_pd.loc[plot_pd['leiden'].isin(self.leiden_middle)].copy()
 
         a1['p_time']=np.random.normal(0.07, 0.03, len(a1))
         a2['p_time']=np.random.normal(0.93, 0.03, len(a2))
+        a3['p_time']=np.random.normal(0.5, 0.05, len(a3))
 
-        train_pd=pd.concat([a1,a2])
+        train_pd=pd.concat([a1,a3,a2])
         train_pd.index=train_pd['cell_id']
 
 
@@ -341,3 +363,53 @@ class scLTNN(object):
             new_x.append(x)
         self.adata_test.obs['LTNN_time']=new_x
         self.adata_test.obs['LTNN_time_r']=1-np.array(new_x)
+
+    def lazy_cal(self,model_path,n_top_genes=10000,n_components=100,
+                resolution=1.0,species='human',leiden_range=0.01,
+                leiden_range_mid=0.05,batch_size=30,epochs=30,verbose=0):
+        r"""Lazy function to calculate the LTNN time of scRNA-seq
+
+        Arguments
+        ---------
+        model_path
+            the path of the ANN model constructed by primriart training
+        n_top_genes
+            the num of the high variable genes selected
+        n_components
+            the num latent dimension of LSI 
+        resolution
+            A parameter value controlling the coarseness of the clustering.
+            Higher values lead to more clusters.
+            Set to `None` if overriding `partition_type`
+            to one that doesn’t accept a `resolution_parameter`.
+        species
+            the species of scRNA-seq
+            human:human
+            mouse:mouse 
+            zebrafish:zebrafish
+        leiden_range
+            the range of start and end node
+        leiden_range_mid
+            the range of middle node
+        batch_size
+            the batch_size of ANN model
+        epochs
+            the epochs of ANN model
+        verbose
+            the visualization of ANN model summary
+        
+        """
+
+        self.load_model(model_path)
+        self.cal_high_variable_genes(n_top_genes)
+        self.cal_lsi(n_components=n_components)
+        self.cal_paga(resolution=resolution)
+        self.cal_model_time()
+        self.cal_rps_value(species=species)
+        self.cal_dpt_pseudotime(leiden_range=leiden_range,
+                                leiden_range_mid=leiden_range_mid)
+        self.ANN(batch_size=batch_size,epochs=epochs,verbose=verbose)
+        self.cal_distrubute()
+        self.cal_scLTNN_time()
+        print('......LTNN time calculate finished.')
+

@@ -12,7 +12,7 @@ with open("README.md", "r") as fh:
 if __name__ == "__main__":
     setuptools.setup(
         name="scltnn",
-        version='0.0.1',
+        version='0.0.2',
         packages=['scltnn'],
         author='starlitnightly',
         author_email='starlitnightly@163.com',
@@ -24,9 +24,10 @@ if __name__ == "__main__":
         "Programming Language :: Python :: 3",
         "Operating System :: OS Independent",],
         install_requires=[
-            'scanpy',
-            'scvelo',
+            'scanpy==1.9.1',
             'scglue',
+            'keras==2.8.0',
+            'distfit',
         ],
-        python_requires='>=3',
+        python_requires='>=3.8',
     )
