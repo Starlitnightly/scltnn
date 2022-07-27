@@ -17,9 +17,10 @@ For more details, please check out our [publication]().
 ```
 .
 ├── scLTNN                  # Main Python package
-├── data                    # Data files
 ├── experiments             # Experiments and case studies
-├── docs                    # Documentation files
+├── scltnn                  # the raw code of scltnn
+├── model                   # the pre-model by ANN
+├── source                  # Documentation files
 ├── LICENSE
 └── README.md
 ```
@@ -39,7 +40,6 @@ Please checkout the documentations and tutorials at scltnn.readthedocs.io.
 
 ## Reproduce results
 
-1. Follow instructions in `data` to prepare the necessary data
+1. Follow instructions in `data` to prepare the necessary data, it can be download at https://figshare.com/articles/dataset/scltnn_data/20383416
 2. Follow instructions in `experiments` for case studies
-
 
