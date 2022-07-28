@@ -12,7 +12,7 @@ For more details, please check out our [publication]().
 
 ````
 .
-├── scLTNN                  # Main Python package
+├── scltnn                  # Main Python package
 ├── experiments             # Experiments and case studies
 ├── scltnn                  # the raw code of scltnn
 ├── model                   # the pre-model by ANN

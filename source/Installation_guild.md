@@ -8,6 +8,5 @@ The `scltnn` package can be installed via pip using one of the following command
 pip install scltnn
 ```
 
->`Note`
-To avoid potential dependency conflicts, installing within a pip environment is recommended.
+**Note** To avoid potential dependency conflicts, installing within a pip environment is recommended.
 

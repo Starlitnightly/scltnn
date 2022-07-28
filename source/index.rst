@@ -11,7 +11,7 @@ Welcome to scLTNN's documentation!
 .. image:: _static/ltnn.png
    :width: 600
    :alt: Model architecture
-To get started with ``scltnn``, check out the `Installation <Installation_guild.md>`_ and `tutorials <Tutotials/Tutorials.rst>`_.
+To get started with ``scltnn``, check out the `Installation <Installation_guild.md>`_ and `tutorials <Tutorials/Tutorials.rst>`_.
 
 For more details about the LTNN framework, please check out our `publication <none>`_
 
