@@ -370,7 +370,7 @@ class scLTNN(object):
         self.adata_test.obs['LTNN_time_r']=1-np.array(new_x)
 
     def lazy_cal(self,model_path,n_top_genes=10000,n_components=100,
-                resolution=1.0,species='human',leiden_range=0.01,
+                resolution=1.0,species='human',leiden_range_start=0.01,leiden_range_end=0.01,
                 leiden_range_mid=0.05,batch_size=30,epochs=30,verbose=0):
         r"""Lazy function to calculate the LTNN time of scRNA-seq
 
@@ -411,10 +411,77 @@ class scLTNN(object):
         self.cal_paga(resolution=resolution)
         self.cal_model_time()
         self.cal_rps_value(species=species)
-        self.cal_dpt_pseudotime(leiden_range=leiden_range,
+        self.cal_dpt_pseudotime(leiden_range_start=leiden_range_start,leiden_range_end=leiden_range_end,
                                 leiden_range_mid=leiden_range_mid)
         self.ANN(batch_size=batch_size,epochs=epochs,verbose=verbose)
         self.cal_distrubute()
         self.cal_scLTNN_time()
         print('......LTNN time calculate finished.')
 
+
+import time
+import requests
+import os
+
+
+def model_downloader(url,path,title):
+    r"""model downloader
+    
+    Arguments
+    ---------
+    url
+        the download url of model
+    path
+        the save path of model
+    title
+        the name of model
+    
+    """
+    if os.path.isfile(path):
+        print("......Loading dataset from {}".format(path))
+        return path
+    else:
+        print("......Downloading dataset save to {}".format(path))
+        
+    dirname, _ = os.path.split(path)
+    try:
+        if not os.path.isdir(dirname):
+            print("......Creating directory {}".format(dirname))
+            os.makedirs(dirname, exist_ok=True)
+    except OSError as e:
+        print("......Unable to create directory {}. Reason {}".format(dirname,e))
+    
+    
+    start = time.time()
+    size = 0
+    res = requests.get(url, stream=True)
+
+    chunk_size = 10240
+    content_size = int(res.headers["content-length"]) 
+    if res.status_code == 200:
+        print('......[%s Size of file]: %0.2f MB' % (title, content_size/chunk_size/102))
+        with open(path, 'wb') as f:
+            for data in res.iter_content(chunk_size=chunk_size):
+                f.write(data)
+                size += len(data) 
+                print('\r'+ '......[Downloader]: %s%.2f%%' % ('>'*int(size*50/content_size), float(size/content_size*100)), end='')
+        end = time.time()
+        print('\n' + ".......Finish！%s.2f s" % (end - start))
+    
+    return path
+
+def LTNN_model_pre(model_name='ANN_LSI_20'):
+    r"""Download the pre-model of LTNN
+    
+    Arguments
+    ---------
+    model_name
+        'ANN_LSI_20': the n_components of LSI is 20 in LTNN model
+        'ANN_LSI_100': the n_components of LSI is 100 in LTNN model
+    
+    """
+    _models={
+        'ANN_LSI_20':'https://figshare.com/ndownloader/files/36787641',
+        'ANN_LSI_100':'https://figshare.com/ndownloader/files/36787647',
+    }
+    return model_downloader(url=_models[model_name],path='datasets/{}.h5'.format(model_name),title=model_name)

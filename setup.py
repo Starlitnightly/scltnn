@@ -12,14 +12,14 @@ with open("README.md", "r") as fh:
 if __name__ == "__main__":
     setuptools.setup(
         name="scltnn",
-        version='0.0.3',
+        version='0.0.4',
         packages=['scltnn'],
         author='starlitnightly',
         author_email='starlitnightly@163.com',
         description='A library to calculate the latent time of scRNA-seq',
         long_description=long_description,  
         long_description_content_type="text/markdown",  
-        url="https://github.com/Starlitnightly/scltnn.git",  # 模块github地址
+        url="https://github.com/Starlitnightly/scltnn",  # 模块github地址
         classifiers=[
         "Programming Language :: Python :: 3",
         "Operating System :: OS Independent",],
