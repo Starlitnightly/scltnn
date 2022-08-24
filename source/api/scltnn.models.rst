@@ -1,4 +1,4 @@
-scltnn.models
+﻿scltnn.models
 =============
 
 .. automodule:: scltnn.models
@@ -8,6 +8,15 @@ scltnn.models
    
 
    
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      LTNN_model_pre
+      model_downloader
    
    
 
