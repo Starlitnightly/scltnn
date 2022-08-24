@@ -4,7 +4,7 @@
 
 **A composite regression neural network for latent timing prediction of single-cell RNA-seq data**
 
-[![ltnn](https://github.com/Starlitnightly/scltnn/ltnn.png)](ltnn.png)
+[![ltnn](ltnn.png)](ltnn.png)
 
 For more details, please check out our [publication]().
 
