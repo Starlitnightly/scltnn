@@ -10,6 +10,7 @@ import matplotlib.pyplot as plt
 
 from distfit import distfit
 from scipy.stats import norm,dweibull
+from scipy import stats
 from keras.models import load_model
 import pandas as pd
 import numpy as np
@@ -126,3 +127,54 @@ def cal_model_time(adata,model_path):
     adata.obs['p_time_r']=1-PredValSet.T[0]
     
 
+def find_high_correlation_gene(adata,rev=False):
+
+    r"""Calculate the Pearson Correlation between gene and LTNN_time
+
+    Arguments
+    ---------
+    adata
+        the anndata performed LTNN analysis
+    rev
+        the selection of LTNN_time or LTNN_time_r
+
+    Returns
+    -------
+    LTNN_time_Pearson
+        the pandas of LTNN_time_Pearson 
+    adata
+        the anndata calculated by find_high_correlation_gene
+    """
+
+    """
+    # Extract data from count matrix
+    """
+    if rev==True:
+        pd1=adata.obs.loc[:,['LTNN_time_r']]
+    else:
+        pd1 = adata.obs.loc[:,['LTNN_time']]
+    pd2 = pd.DataFrame(adata.X.toarray(),columns = adata.var_names,index = adata.obs_names )
+
+    """
+    # Calculate the Pearson Correlation
+    """
+    LTNN_time_Cor = np.arange(len(adata.var.index),dtype=float)  
+    for i in range(len(pd2.columns)):
+    res = stats.pearsonr(pd1.to_numpy().flatten(),pd2.iloc[:,i].to_numpy())
+    LTNN_time_Cor[i] = float(res[0])
+
+    """
+    # Assign Pearson_Correlation to adata
+    """
+    LTNN_time_Pearson = pd.DataFrame(LTNN_time_Cor,index=pd2.columns)
+    adata.var.loc[:,'Pearson_correlation'] = LTNN_time_Pearson.iloc[:,0].to_list()
+    """
+    # Extract the Pearson Correlation
+    """
+    LTNN_time_Pearson['feautre'] = LTNN_time_Pearson.index
+    LTNN_time_Pearson.columns = ['correlation','feature']
+    LTNN_time_Pearson['abs_correlation'] = LTNN_time_Pearson['correlation'].abs()
+    LTNN_time_Pearson['sig']='+'
+    LTNN_time_Pearson.loc[(LTNN_time_Pearson.correlation<0),'sig'] = '-'
+    LTNN_time_Pearson=LTNN_time_Pearson.sort_values('correlation',ascending=False)
+    return LTNN_time_Pearson,adata
