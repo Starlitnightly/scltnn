@@ -91,7 +91,9 @@ def plot_high_correlation_heatmap(
     meta_legend_kws={'ncol':2,'interval':7,'distance':23},
     **kwarg
 ):
-    r"""Heatmap of gene changes with LTNN_time
+    r"""
+    Heatmap of gene changes with LTNN_time
+
     Arguments
     ---------
     adata
@@ -208,7 +210,7 @@ def plot_high_correlation_heatmap(
                                         label=label, linewidth=0)
                 yy.append(b1)
 
-            legend3 = plt.legend(yy, adata_1.obs.loc[adata_index,i].unique(), fontsize=fontsize,
+            legend3 = plt.legend(yy, adata.obs.loc[adata_index,i].unique(), fontsize=fontsize,
                                   loc='center',title=i, ncol=meta_legend_kws['ncol'], bbox_to_anchor=(meta_legend_kws['distance']+k, -2, 0.5, 0.5), )
             plt.gca().add_artist(legend3)  
             k+=meta_legend_kws['interval']
@@ -222,7 +224,9 @@ def plot_high_correlation_heatmap(
 
 
 def plot_origin_tesmination(adata,origin,tesmination):
-    r"""plot the origin and tesmination cell of scRNA-seq
+    r"""
+    plot the origin and tesmination cell of scRNA-seq
+    
     Arguments
     ---------
     adata

@@ -12,8 +12,8 @@ from keras.layers import Dense,Conv1D,Convolution1D,Activation,MaxPooling1D,Flat
 
 from keras.callbacks import TensorBoard
 from keras import regularizers
-import scglue
 import scanpy as sc
+from . import utils
 
 from anndata import AnnData
 
@@ -88,7 +88,7 @@ class scLTNN(object):
         """
         print('......calculate lsi')
         self.n_components=n_components
-        scglue.data.lsi(self.adata_test, n_components=n_components, n_iter=15)
+        utils.cal_lsi(self.adata_test, n_components=n_components, n_iter=15)
         
     def cal_paga(self,resolution=1.0):
         r"""calculate the paga graph by community detection of leiden

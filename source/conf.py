@@ -33,7 +33,6 @@ release = '1.0.0'
 
 extensions = [
     'recommonmark',
-    'sphinx_markdown_tables',
     'sphinx.ext.autosummary',
     'sphinx.ext.autodoc',
     'sphinx.ext.intersphinx',
