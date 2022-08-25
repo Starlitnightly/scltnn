@@ -130,14 +130,12 @@ def cal_model_time(adata,model_path):
 def find_high_correlation_gene(adata,rev=False):
 
     r"""Calculate the Pearson Correlation between gene and LTNN_time
-
     Arguments
     ---------
     adata
         the anndata performed LTNN analysis
     rev
         the selection of LTNN_time or LTNN_time_r
-
     Returns
     -------
     LTNN_time_Pearson
@@ -160,8 +158,8 @@ def find_high_correlation_gene(adata,rev=False):
     """
     LTNN_time_Cor = np.arange(len(adata.var.index),dtype=float)  
     for i in range(len(pd2.columns)):
-    res = stats.pearsonr(pd1.to_numpy().flatten(),pd2.iloc[:,i].to_numpy())
-    LTNN_time_Cor[i] = float(res[0])
+        res = stats.pearsonr(pd1.to_numpy().flatten(),pd2.iloc[:,i].to_numpy())
+        LTNN_time_Cor[i] = float(res[0])
 
     """
     # Assign Pearson_Correlation to adata
