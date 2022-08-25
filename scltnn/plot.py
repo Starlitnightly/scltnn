@@ -179,16 +179,16 @@ def plot_high_correlation_heatmap(
                            mask=False,yticklabels=True,
                             col_cluster=False,**kwarg
                          )
-    x0, _y0, _w, _h = a.cbar_pos
+    #x0, _y0, _w, _h = a.cbar_pos
     #a.ax_cbar.set_position([x0, 0.9, a.ax_row_dendrogram.get_position().width, 0.02])
     #a.ax_cbar.set_title('colorbar title')
-    a.ax_cbar.tick_params(axis='x', length=10,size=fontsize)
+    #a.ax_cbar.tick_params(axis='x', length=10,size=fontsize)
     #for spine in a.ax_cbar.spines:
     #    a.ax_cbar.spines[spine].set_color('crimson')
     #    a.ax_cbar.spines[spine].set_linewidth(2)
-    a.ax_cbar.xaxis.label.set_size(fontsize)
-    labels=a.ax_col_colors.yaxis.get_ticklabels()
-    plt.setp(labels, fontsize=fontsize)
+    #a.ax_cbar.xaxis.label.set_size(fontsize)
+        #labels=a.ax_col_colors.yaxis.get_ticklabels()
+        #plt.setp(labels, fontsize=fontsize)
     
     #set the tick fontsize
     a.ax_heatmap.yaxis.set_tick_params(labelsize=fontsize)
@@ -212,6 +212,9 @@ def plot_high_correlation_heatmap(
                                   loc='center',title=i, ncol=meta_legend_kws['ncol'], bbox_to_anchor=(meta_legend_kws['distance']+k, -2, 0.5, 0.5), )
             plt.gca().add_artist(legend3)  
             k+=meta_legend_kws['interval']
+        
+        labels=a.ax_col_colors.yaxis.get_ticklabels()
+        plt.setp(labels, fontsize=fontsize)
             
     
     
