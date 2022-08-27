@@ -28,6 +28,7 @@
    :template: module.rst
    :recursive:
 
+   scltnn.datasets
    scltnn.models
    scltnn.plot
    scltnn.utils
