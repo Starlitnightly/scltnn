@@ -2,6 +2,7 @@ import time
 import requests
 import os
 from keras.models import load_model
+import scanpy as sc
 
 def model_downloader(url,path,title):
     r"""model downloader
@@ -50,7 +51,7 @@ def model_downloader(url,path,title):
     return path
 
 
-def download_dataset_pre(datasets_name='ZhangZemin_CD8+'):
+def Cancer_CD8():
     r""" Download the dataset
 
     Arguments
@@ -58,8 +59,43 @@ def download_dataset_pre(datasets_name='ZhangZemin_CD8+'):
     datasets_name:
         'ZhangZemin_CD8+':the dataset of BCL of CD8+ T cells,GEO:GSE156728
     """
-
+    datasets_name='ZhangZemin_CD8+'
     _datasets={
         'ZhangZemin_CD8+':'https://figshare.com/ndownloader/files/36870252',
     }
-    return model_downloader(url=_datasets[datasets_name],path='datasets/{}.h5ad'.format(datasets_name),title=datasets_name)
+    model_path = model_downloader(url=_datasets[datasets_name],path='datasets/{}.h5ad'.format(datasets_name),title=datasets_name)
+    adata = sc.read_h5ad(model_path)
+    return adata
+
+
+def Zebrafish():
+    r""" Download the dataset
+
+    Arguments
+    ---------
+    datasets_name:
+        'Zebrafish':the dataset of zebrafish cells
+    """
+    datasets_name='Zebrafish'
+    _datasets={
+        'Zebrafish':'https://figshare.com/ndownloader/files/27265280',
+    }
+    model_path = model_downloader(url=_datasets[datasets_name],path='datasets/{}.h5ad'.format(datasets_name),title=datasets_name)
+    adata = sc.read_h5ad(model_path)
+    return adata
+
+def Pancreas():
+    r""" Download the dataset
+
+    Arguments
+    ---------
+    datasets_name:
+        'Pancreas':the dataset of Pancreas cells
+    """
+    datasets_name='Pancreas'
+    _datasets={
+        'Pancreas':'https://figshare.com/ndownloader/files/36892242',
+    }
+    model_path = model_downloader(url=_datasets[datasets_name],path='datasets/{}.h5ad'.format(datasets_name),title=datasets_name)
+    adata = sc.read_h5ad(model_path)
+    return adata    
