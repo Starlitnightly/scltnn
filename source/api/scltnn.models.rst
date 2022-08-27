@@ -1,4 +1,4 @@
-﻿scltnn.models
+scltnn.models
 =============
 
 .. automodule:: scltnn.models

@@ -19,6 +19,9 @@ scltnn.utils
       cal_lsi
       cal_model_time
       cal_paga
+      find_high_correlation_gene
+      lsi
+      tfidf
    
    
 

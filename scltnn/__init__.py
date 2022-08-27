@@ -33,5 +33,4 @@ __all__ = [
     "Dropout",
     "TensorBoard",
     "regularizers",
-    "scglue"
 ]

@@ -5,7 +5,6 @@ scanpy
 matplotlib
 seaborn
 sklearn
-scglue
 distfit
 tensorflow
 sphinx_autosummary_accessors
