@@ -1,3 +1,7 @@
+r"""
+The SCLTNN core model
+"""
+
 from keras.models import Sequential
 from keras.layers import Dense
 from sklearn.metrics import r2_score

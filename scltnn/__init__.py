@@ -8,7 +8,7 @@ except ModuleNotFoundError:
     from pkg_resources import get_distribution
     version = lambda name: get_distribution(name).version
 
-from . import models,plot,utils
+from . import models,plot,utils,datasets
 
 name = "scltnn"
 __version__ = version(name)
