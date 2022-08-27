@@ -39,7 +39,7 @@ def model_downloader(url,path,title):
     chunk_size = 102400
     content_size = int(res.headers["content-length"]) 
     if res.status_code == 200:
-        print('......[%s Size of file]: %0.2f MB' % (title, content_size/chunk_size/1020))
+        print('......[%s Size of file]: %0.2f MB' % (title, content_size/chunk_size/10.24))
         with open(path, 'wb') as f:
             for data in res.iter_content(chunk_size=chunk_size):
                 f.write(data)
