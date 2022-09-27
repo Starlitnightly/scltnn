@@ -12,8 +12,8 @@ with open("README.md", "r") as fh:
 if __name__ == "__main__":
     setuptools.setup(
         name="scltnn",
-        version='0.0.7',
-        packages=['scltnn'],
+        version='0.0.8',
+        packages=setuptools.find_packages(),
         author='starlitnightly',
         author_email='starlitnightly@163.com',
         description='A library to calculate the latent time of scRNA-seq',
