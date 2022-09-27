@@ -212,3 +212,38 @@ def find_high_correlation_gene(adata,rev=False):
     LTNN_time_Pearson.loc[(LTNN_time_Pearson.correlation<0),'sig'] = '-'
     LTNN_time_Pearson=LTNN_time_Pearson.sort_values('correlation',ascending=False)
     return LTNN_time_Pearson,adata
+
+def find_related_gene(adata):
+    r"""Find out the gene with postivate relation of the amounts of cells
+    Arguments
+    ---------
+    adata
+        the anndata performed LTNN analysis
+
+    Returns
+    -------
+    res_pd
+        the pandas of correlation with genes and the amounts of cells
+
+    """
+    adata_copy=adata.copy()
+    sc.pp.filter_cells(adata_copy, min_genes=200)
+    sc.pp.filter_genes(adata_copy, min_cells=3)
+    t1=np.array(adata_copy.obs['n_genes'].values)
+    if len(adata_copy.var)%5000==0:
+        len1=(len(adata_copy.var)//5000)
+    else:
+        len1=(len(adata_copy.var)//5000)+1
+    res_pd=pd.DataFrame(columns=['gene','cor'])
+    for i in range(len1):
+        if scipy.sparse.issparse(adata.X):
+            t2=np.array(adata_copy[:,:].X.toarray().T[5000*(i):5000*(i+1)])
+        else:
+            t2=np.array(adata_copy[:,:].X.T[5000*(i):5000*(i+1)])
+        cor=np.corrcoef(t1,t2)
+        cor_pd=pd.DataFrame()
+        cor_pd['gene']=adata_copy.var.index[5000*(i):5000*(i+1)]
+        cor_pd['cor']=cor[0,1:]
+        res_pd=pd.concat([res_pd,cor_pd])
+    res_pd=res_pd.sort_values('cor',ascending=False)
+    return res_pd

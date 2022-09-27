@@ -90,7 +90,7 @@ class scLTNN(object):
             the num latent dimension of LSI 
         
         """
-        print('......calculate lsi')
+        #print('......calculate lsi')
         self.n_components=n_components
         utils.cal_lsi(self.adata_test, n_components=n_components, n_iter=15)
         
@@ -123,7 +123,28 @@ class scLTNN(object):
         PredValSet=(self.model.predict(X_val))
         self.adata_test.obs['p_time']=PredValSet.T[0]
         self.adata_test.obs['p_time_r']=1-PredValSet.T[0]
+
+    def cal_exp_gene_value(self):
+        r"""Calculated the gene with the same trend in the expression gene amount of cell
         
+        Arguments
+        ---------
+        
+        """
+        res_pd=utils.find_related_gene(self.adata_test)
+        h_gene=res_pd['gene'][:200].values
+        RPS_s=self.adata_test[self.adata_test.obs['p_time']<0.2,h_gene].X.mean()
+        RPS_l=self.adata_test[self.adata_test.obs['p_time']>0.8,h_gene].X.mean()
+        if RPS_s==0:
+            RPS_s=self.adata_test[self.adata_test.obs['p_time']<0.4,h_gene].X.mean()
+        if RPS_l==0:
+            RPS_l=self.adata_test[self.adata_test.obs['p_time']>0.6,h_gene].X.mean()
+        print('gene in p_time_low',RPS_s,'gene in p_time_high',RPS_l)
+        if ((RPS_s>RPS_l)):
+            self.adata_test.obs['p_latent_time']=self.adata_test.obs['p_time']
+        else:
+            self.adata_test.obs['p_latent_time']=self.adata_test.obs['p_time_r']
+
     def cal_rps_value(self,species='human',rev=True):
         r"""calculate the mean of rps protein in start and end node 
         
@@ -414,7 +435,7 @@ class scLTNN(object):
         self.cal_lsi(n_components=n_components)
         self.cal_paga(resolution=resolution)
         self.cal_model_time()
-        self.cal_rps_value(species=species)
+        self.cal_exp_gene_value()
         self.cal_dpt_pseudotime(leiden_range_start=leiden_range_start,leiden_range_end=leiden_range_end,
                                 leiden_range_mid=leiden_range_mid)
         self.ANN(batch_size=batch_size,epochs=epochs,verbose=verbose)
