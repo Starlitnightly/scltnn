@@ -1,0 +1,5 @@
+build
+.ipynb_checkpoints
+scltnn.egg-info
+data
+source/Tutorials/datasets
