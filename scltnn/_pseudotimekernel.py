@@ -1011,11 +1011,17 @@ from scipy.sparse import diags, issparse, spmatrix, csr_matrix, isspmatrix_csr
 import numpy as np
 
 def _connected(c: Union[spmatrix, np.ndarray]) -> bool:
-    """Check whether the undirected graph encoded by c is connected."""
-
+    """Check whether the undirected graph is connected."""
     import networkx as nx
 
-    G = nx.from_scipy_sparse_matrix(c) if issparse(c) else nx.from_numpy_array(c)
+    if issparse(c):
+        try:
+            G = nx.from_scipy_sparse_array(c)
+        except AttributeError:
+            # bwd compatibility for `networkx <2.7`
+            G = nx.from_scipy_sparse_matrix(c)
+    else:
+        G = nx.from_numpy_array(c)
 
     return nx.is_connected(G)
 def _irreducible(d: Union[spmatrix, np.ndarray]) -> bool:

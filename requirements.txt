@@ -1,12 +1,11 @@
 scltnn
-keras
 scvelo
 scanpy
 matplotlib
 seaborn
-sklearn
+scikit-learn
 distfit
-tensorflow
+
 sphinx_autosummary_accessors
 sphinx_autodoc_typehints
 recommonmark

@@ -8,31 +8,11 @@ except ModuleNotFoundError:
     from pkg_resources import get_distribution
     version = lambda name: get_distribution(name).version
 
-from . import models,plot,utils,datasets
+from . import models,plot,datasets
+from .models import lsi
+from .models import scLTNN
 
 from ._pseudotimekernel import PseudotimeKernel
 
 name = "scltnn"
 __version__ = version(name)
-
-__all__ = [
-    "Sequential",
-    "Dense",
-    "r2_score",
-    "plt",
-    "distfit",
-    "norm",
-    "dweibull",
-    "load_model",
-    "pd",
-    "np",
-    "Dense",
-    "Conv1D",
-    "Convolution1D",
-    "Activation",
-    "MaxPooling1D",
-    "Flatten",
-    "Dropout",
-    "TensorBoard",
-    "regularizers",
-]

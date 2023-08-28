@@ -3,3 +3,4 @@ build
 scltnn.egg-info
 data
 source/Tutorials/datasets
+*.h5ad

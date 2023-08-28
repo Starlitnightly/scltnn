@@ -55,7 +55,7 @@ def data_downloader(url,path,title):
     return path
 
 
-def Cancer_CD8():
+def BoneMarrow():
     r""" Download the dataset 'ZhangZemin_CD8+':
         BCL of CD8+ T cells,GEO:GSE156728
 
@@ -64,9 +64,9 @@ def Cancer_CD8():
     adata
         the anndata of ZhangZemin_CD8+
     """
-    datasets_name='ZhangZemin_CD8+'
+    datasets_name='BoneMarrow'
     _datasets={
-        'ZhangZemin_CD8+':'https://figshare.com/ndownloader/files/36870252',
+        'BoneMarrow':'https://figshare.com/ndownloader/files/42158367',
     }
     model_path = data_downloader(url=_datasets[datasets_name],path='datasets/{}.h5ad'.format(datasets_name),title=datasets_name)
     adata = sc.read_h5ad(model_path)
@@ -84,7 +84,7 @@ def Zebrafish():
     """
     datasets_name='Zebrafish'
     _datasets={
-        'Zebrafish':'https://figshare.com/ndownloader/files/27265280',
+        'Zebrafish':'https://figshare.com/ndownloader/files/42158376',
     }
     model_path = data_downloader(url=_datasets[datasets_name],path='datasets/{}.h5ad'.format(datasets_name),title=datasets_name)
     adata = sc.read_h5ad(model_path)
@@ -104,7 +104,7 @@ def Pancreas():
     """
     datasets_name='Pancreas'
     _datasets={
-        'Pancreas':'https://figshare.com/ndownloader/files/36892242',
+        'Pancreas':'https://figshare.com/ndownloader/files/42158373',
     }
     model_path = data_downloader(url=_datasets[datasets_name],path='datasets/{}.h5ad'.format(datasets_name),title=datasets_name)
     adata = sc.read_h5ad(model_path)

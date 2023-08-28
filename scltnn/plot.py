@@ -223,7 +223,7 @@ def plot_high_correlation_heatmap(
     return a
 
 
-def plot_origin_tesmination(adata,origin,tesmination):
+def plot_origin_tesmination(adata,basis,origin,tesmination,figsize=(4,4),**kwargs):
     r"""
     plot the origin and tesmination cell of scRNA-seq
     
@@ -241,6 +241,7 @@ def plot_origin_tesmination(adata,origin,tesmination):
     ax
         the axex subplot of heatmap
     """
+    fig, ax = plt.subplots(figsize=figsize)
     start_mao=[]
     start_mao_name=[]
     for i in adata.obs['leiden']:
@@ -266,21 +267,19 @@ def plot_origin_tesmination(adata,origin,tesmination):
     adata.uns['mao_name_colors'] = nw.map(mao_color)
     #return adata
     
-    ax=sc.pl.embedding(adata,basis='umap',edges=True,edges_color='#f4897b',
-                   color='mao_name',title='Origin and Tesmination',alpha=0.6,
-                   frameon=False,legend_fontsize=13,show=False)
+    sc.pl.embedding(adata,basis=basis,color='mao_name',show=False,ax=ax,**kwargs)
     #t.plot([0,10],[0,10])
 
-    circle1_loc=adata[adata.obs['mao']=='-1'].obsm['X_umap'].mean(axis=0)
-    circle1_max=adata[adata.obs['mao']=='-1'].obsm['X_umap'].max(axis=0)
+    circle1_loc=adata[adata.obs['mao']=='-1'].obsm[basis].mean(axis=0)
+    circle1_max=adata[adata.obs['mao']=='-1'].obsm[basis].max(axis=0)
     circle1_r=circle1_loc[0]-circle1_max[0]
     circle1 = plt.Circle(circle1_loc, circle1_r*1.2, color='#e25d5d',fill=False,ls='--',lw=2)
 
-    circle2_loc=adata[adata.obs['mao']=='1'].obsm['X_umap'].mean(axis=0)
-    circle2_max=adata[adata.obs['mao']=='1'].obsm['X_umap'].max(axis=0)
+    circle2_loc=adata[adata.obs['mao']=='1'].obsm[basis].mean(axis=0)
+    circle2_max=adata[adata.obs['mao']=='1'].obsm[basis].max(axis=0)
     circle2_r=circle2_loc[0]-circle2_max[0]
     circle2 = plt.Circle(circle2_loc, circle2_r*1.2, color='#a51616',fill=False,ls='--',lw=2)
 
     ax.add_patch(circle1)
     ax.add_patch(circle2)
-    return ax
+    return fig,ax
